@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
 import { RegisterRequestInterface } from "../types/register-request.interface";
+import { LoginRequestInterface } from "../types/login-request.interface";
 
 @Injectable()
 export class AuthService {
@@ -20,8 +21,12 @@ export class AuthService {
 
   public register(registerRequest: RegisterRequestInterface): Observable<CurrentUserInterface> {
     const url = `${environment.apiUrl}/users/register`;
-
     return this.httpClient.post<CurrentUserInterface>(url, registerRequest);
+  }
+
+  public login(loginRequest: LoginRequestInterface): Observable<CurrentUserInterface> {
+    const url = `${environment.apiUrl}/users/login`;
+    return this.httpClient.post<CurrentUserInterface>(url, loginRequest);
   }
 
   public setToken(currentUser: CurrentUserInterface): void {
