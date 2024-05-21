@@ -1,0 +1,36 @@
+<div class="login-page">
+  <a routerLink="/">
+    <img src="/assets/trello-logo.svg" class="trello-main-logo" alt="trello clone">
+  </a>
+  <div class="form-container">
+    <div class="login-header">Register to CRM</div>
+    <div *ngIf="error" class="errors">
+      {{ error }}
+    </div>
+    <form [formGroup]="form" (submit)="onSubmit()">
+      <input
+        formControlName="email"
+        type="email"
+        placeholder="Email"
+        class="login-input"
+      >
+      <input
+        formControlName="username"
+        type="text"
+        placeholder="Username"
+        class="login-input"
+      >
+      <input
+        formControlName="password"
+        type="password"
+        placeholder="Password"
+        class="login-input"
+      >
+      <button type="submit" class="login-submit-button">Register</button>
+    </form>
+
+  <div class="bottom-form-links">
+    <a routerLink="/login" class="register-link"></a>
+  </div>
+  </div>
+</div>
