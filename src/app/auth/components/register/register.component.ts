@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from "@angular/router";
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
 import { RegisterRequestInterface } from "../../types/register-request.interface";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -27,6 +27,7 @@ interface RegisterFormInterface {
 
 export class RegisterComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   public form: FormGroup<RegisterFormInterface>;
   public error?: string | null;
@@ -56,6 +57,8 @@ export class RegisterComponent {
 
           this.authService.setToken(currentUser);
           this.authService.setCurrentUser(currentUser);
+          this.error = null;
+          this.router.navigateByUrl('/');
         },
         error: (error: HttpErrorResponse) => {
           console.log(error)

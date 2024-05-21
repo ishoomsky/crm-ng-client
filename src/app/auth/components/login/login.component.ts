@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgIf } from "@angular/common";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
-import { RegisterRequestInterface } from "../../types/register-request.interface";
 import { HttpErrorResponse } from "@angular/common/http";
 import { LoginRequestInterface } from "../../types/login-request.interface";
 interface LoginFormInterface {
@@ -24,6 +23,7 @@ interface LoginFormInterface {
 })
 export class LoginComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   public form: FormGroup<LoginFormInterface>;
   public errorMessage?: string | null;
@@ -51,6 +51,10 @@ export class LoginComponent {
 
           this.authService.setToken(currentUser);
           this.authService.setCurrentUser(currentUser);
+          this.errorMessage = null;
+
+          console.log(this.router)
+          this.router.navigateByUrl('/');
         },
         error: (error: HttpErrorResponse) => {
           console.log(error)
