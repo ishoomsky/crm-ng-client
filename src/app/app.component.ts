@@ -8,7 +8,6 @@ import { CurrentUserInterface } from "./auth/types/current-user.interface";
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
-  providers: [AuthService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

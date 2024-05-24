@@ -1,16 +1,19 @@
 import { Routes } from '@angular/router';
+import { AuthenticatedUserGuard, NonAuthenticatedUserGuard } from "@app/app.guards";
 
 export const routes: Routes = [
   {
     path: 'register',
-    loadChildren: () => import('./auth/components/register/register.route').then(feature => feature.registerRoute),
+    loadChildren: () => import('@app/auth/components/register/register.route').then(feature => feature.registerRoute),
+    canActivate: [AuthenticatedUserGuard],
   },
   {
     path: 'login',
-    loadChildren: () => import('./auth/components/login/login.route').then(feature => feature.loginRoute),
+    loadChildren: () => import('@app/auth/components/login/login.route').then(feature => feature.loginRoute),
+    canActivate: [AuthenticatedUserGuard],
   },
   {
     path: 'home',
-    loadChildren: () => import('./home/components/home/home.route').then(feature => feature.homeRoute)
+    loadChildren: () => import('@app/home/components/home/home.route').then(feature => feature.homeRoute),
   }
 ];
