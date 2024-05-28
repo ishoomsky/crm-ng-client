@@ -18,4 +18,10 @@ export class BoardsService {
 
     return this.httpClient.post<BoardInterface>(url, {title});
   }
+
+  public getBoard(boardId: string): Observable<BoardInterface> {
+    const url = `${environment.apiUrl}/boards/${boardId}`;
+
+    return this.httpClient.get<BoardInterface>(url);
+  }
 }

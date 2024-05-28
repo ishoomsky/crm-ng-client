@@ -18,6 +18,11 @@ export const routes: Routes = [
     canActivate: [AuthenticatedUserGuard],
   },
   {
+    path: 'boards/:boardId',
+    loadChildren: () => import('@app/boards/components/board/board.route').then(feature => feature.boardRoute),
+    canActivate: [AuthenticatedUserGuard],
+  },
+  {
     path: '',
     loadChildren: () => import('@app/home/components/home/home.route').then(feature => feature.homeRoute),
   },
