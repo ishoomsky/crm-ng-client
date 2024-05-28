@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
 import { BoardInterface } from "@app/boards/types/board.interface";
 import { NgForOf } from "@angular/common";
 import { InlineFormComponent } from "@app/shared/components/inline-form/inline-form.component";
+import { TopbarComponent } from "@app/shared/components/topbar/topbar.component";
 
 @Component({
   selector: 'app-boards',
@@ -12,7 +13,8 @@ import { InlineFormComponent } from "@app/shared/components/inline-form/inline-f
     RouterLink,
     RouterLinkActive,
     NgForOf,
-    InlineFormComponent
+    InlineFormComponent,
+    TopbarComponent
   ],
   templateUrl: './boards.component.html',
   styleUrl: './boards.component.scss',

@@ -19,11 +19,7 @@ export class AuthService {
   );
   constructor(
     private httpClient: HttpClient,
-  ) {
-    // effect(() => {
-    //   console.log('isloggedIn change', this.isLoggedIn())
-    // })
-  }
+  ) {}
 
   public getCurrentUser(): Observable<CurrentUserInterface> {
     const apiUrl = `${environment.apiUrl}/user`;
@@ -39,6 +35,12 @@ export class AuthService {
   public login(loginRequest: LoginRequestInterface): Observable<CurrentUserInterface> {
     const url = `${environment.apiUrl}/users/login`;
     return this.httpClient.post<CurrentUserInterface>(url, loginRequest);
+  }
+
+  public logout(): void {
+    localStorage.removeItem('token');
+    this.currentUser.set(null);
+    this.isLoggedIn.set(false);
   }
 
   public setToken(currentUser: CurrentUserInterface): void {
