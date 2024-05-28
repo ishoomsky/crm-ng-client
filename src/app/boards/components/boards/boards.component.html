@@ -1,1 +1,39 @@
-<p>boards works!</p>
+//app top bar here
+
+<div class="boards-page-container">
+  <div class="home-left-sidebar-container">
+    <a
+      routerLink="/boards"
+      routerLinkActive="boards-side-menu-option-selected"
+      class="boards-side-menu-option"
+    >Boards</a>
+    <a
+      routerLink="/"
+      routerLinkActive="boards-side-menu-option-selected"
+      class="boards-side-menu-option"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >Home</a>
+  </div>
+  <div class="boards-section-container">
+    <div class="my-boards">
+      <div class="my-boards-section-header">
+        <div class="boards-page-header-name">My boards</div>
+      </div>
+      <div class="board-tile-list">
+        <app-inline-form
+          class="create-board-form"
+          defaultText="Create new board"
+          (handleSubmit)="createBoard($event)"
+        ></app-inline-form>
+        <a
+          *ngFor="let board of boards"
+          [routerLink]="['/boards', board.id]"
+          class="board-tile"
+        >
+          <div class="board-tile-details-name">{{board.title}}</div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>

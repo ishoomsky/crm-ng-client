@@ -13,4 +13,9 @@ export class BoardsService {
     return this.httpClient.get<BoardInterface[]>(url);
   }
 
+  public createBoard(title: string): Observable<BoardInterface> {
+    const url = environment.apiUrl + '/boards';
+
+    return this.httpClient.post<BoardInterface>(url, {title});
+  }
 }
