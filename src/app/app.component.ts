@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from "./auth/services/auth.service";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { CurrentUserInterface } from "./auth/types/current-user.interface";
+import { SocketService } from "@app/shared/services/socket.service";
 
 @Component({
   selector: 'app-root',
@@ -12,14 +13,14 @@ import { CurrentUserInterface } from "./auth/types/current-user.interface";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'ng-client-web';
-
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
+  private socketService = inject(SocketService);
 
   ngOnInit(): void {
     this.authService.getCurrentUser()
       .subscribe({
         next: (currentUser) => {
+          this.socketService.setupSocketConnection(currentUser);
           this.authService.setCurrentUser(currentUser);
         },
         error: () => {

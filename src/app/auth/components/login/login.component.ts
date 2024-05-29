@@ -47,13 +47,10 @@ export class LoginComponent {
     this.authService.login(registerRequestData)
       .subscribe({
         next: (currentUser) => {
-          console.log('logged in currentUser', currentUser)
-
           this.authService.setToken(currentUser);
           this.authService.setCurrentUser(currentUser);
           this.errorMessage = null;
 
-          console.log(this.router)
           this.router.navigateByUrl('/');
         },
         error: (error: HttpErrorResponse) => {

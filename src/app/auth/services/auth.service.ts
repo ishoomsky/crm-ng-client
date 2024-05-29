@@ -6,6 +6,7 @@ import { environment } from "../../../environments/environment";
 import { RegisterRequestInterface } from "../types/register-request.interface";
 import { LoginRequestInterface } from "../types/login-request.interface";
 import { toObservable } from "@angular/core/rxjs-interop";
+import { SocketService } from "@app/shared/services/socket.service";
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ export class AuthService {
   );
   constructor(
     private httpClient: HttpClient,
+    private socketService: SocketService,
   ) {}
 
   public getCurrentUser(): Observable<CurrentUserInterface> {
@@ -41,6 +43,7 @@ export class AuthService {
     localStorage.removeItem('token');
     this.currentUser.set(null);
     this.isLoggedIn.set(false);
+    this.socketService.disconnect()
   }
 
   public setToken(currentUser: CurrentUserInterface): void {
