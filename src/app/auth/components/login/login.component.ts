@@ -5,6 +5,7 @@ import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { LoginRequestInterface } from "../../types/login-request.interface";
+import { SocketService } from "@app/shared/services/socket.service";
 interface LoginFormInterface {
   email: FormControl<string>,
   password: FormControl<string>,
@@ -24,6 +25,7 @@ interface LoginFormInterface {
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private socketService = inject(SocketService);
 
   public form: FormGroup<LoginFormInterface>;
   public errorMessage?: string | null;
@@ -48,6 +50,7 @@ export class LoginComponent {
       .subscribe({
         next: (currentUser) => {
           this.authService.setToken(currentUser);
+          this.socketService.setupSocketConnection(currentUser);
           this.authService.setCurrentUser(currentUser);
           this.errorMessage = null;
 

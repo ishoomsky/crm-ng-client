@@ -1,8 +1,8 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { CurrentUserInterface } from "../types/current-user.interface";
 import { filter, map, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
+import { environment } from "@environments/environment";
 import { RegisterRequestInterface } from "../types/register-request.interface";
 import { LoginRequestInterface } from "../types/login-request.interface";
 import { toObservable } from "@angular/core/rxjs-interop";

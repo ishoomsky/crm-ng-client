@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
 import { RegisterRequestInterface } from "../../types/register-request.interface";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NgIf } from "@angular/common";
+import { SocketService } from "@app/shared/services/socket.service";
 
 
 interface RegisterFormInterface {
@@ -31,6 +32,7 @@ export class RegisterComponent {
 
   public form: FormGroup<RegisterFormInterface>;
   public error?: string | null;
+  private socketService = inject(SocketService);
 
 
   constructor() {
@@ -53,9 +55,8 @@ export class RegisterComponent {
     this.authService.register(registerRequestData)
       .subscribe({
         next: (currentUser) => {
-          console.log('currentUser', currentUser)
-
           this.authService.setToken(currentUser);
+          this.socketService.setupSocketConnection(currentUser);
           this.authService.setCurrentUser(currentUser);
           this.error = null;
           this.router.navigateByUrl('/');
