@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { BoardsService } from "@app/boards/services/boards.service";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { BoardInterface } from "@app/boards/types/board.interface";
 import { NgForOf } from "@angular/common";
 import { InlineFormComponent } from "@app/shared/components/inline-form/inline-form.component";
 import { TopbarComponent } from "@app/shared/components/topbar/topbar.component";
+import { BoardsApiService } from "@app/boards/services/boards-api.service";
 
 @Component({
   selector: 'app-boards',
@@ -18,20 +18,20 @@ import { TopbarComponent } from "@app/shared/components/topbar/topbar.component"
   ],
   templateUrl: './boards.component.html',
   styleUrl: './boards.component.scss',
-  providers: [BoardsService],
+  providers: [BoardsApiService],
 })
 export class BoardsComponent implements OnInit {
-  private boardsService = inject(BoardsService);
+  private boardsApiService = inject(BoardsApiService);
 
   public boards: BoardInterface[] = [];
   ngOnInit(): void {
-    this.boardsService.getBoards().subscribe((boards) => {
+    this.boardsApiService.getBoards().subscribe((boards) => {
       this.boards = boards;
     })
   }
 
   public createBoard(title: string): void {
-    this.boardsService.createBoard(title)
+    this.boardsApiService.createBoard(title)
       .subscribe((createdBoard) => {
         this.boards = [...this.boards, createdBoard];
       })

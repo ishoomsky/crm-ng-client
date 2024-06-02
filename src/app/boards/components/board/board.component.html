@@ -1,1 +1,25 @@
-<div>{{ boardService.board() | json }}</div>
+<app-topbar></app-topbar>
+
+<div
+  *ngIf="boardService.board() as board"
+  class="board"
+>
+  <div class="board-header-container">
+    inline form board
+  </div>
+  <div class="columns">
+    @for(column of boardService.columns(); track column.id) {
+      <div class="column">
+        <div class="column-title">{{column.title}}</div>
+      </div>
+    }
+    <app-inline-form
+      class="create-column-form"
+      defaultText="Add a list"
+      [hasButton]="true"
+      buttonText="Add list"
+      inputPlaceholder="Add column name"
+      (handleSubmit)="createColumn($event)"
+    ></app-inline-form>
+  </div>
+</div>

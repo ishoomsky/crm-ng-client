@@ -25,7 +25,12 @@
       formControlName="title"
       class="inline-form-input"
     ></textarea>
-    <button *ngIf="hasButton" type="submit" [disabled]="form.invalid">
+    <button
+      *ngIf="hasButton"
+      type="submit"
+      [disabled]="form.invalid"
+      class="inline-form-button"
+    >
       {{ buttonText }}
     </button>
   </form>

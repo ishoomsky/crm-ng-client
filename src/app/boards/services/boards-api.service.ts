@@ -5,7 +5,7 @@ import { BoardInterface } from "@app/boards/types/board.interface";
 import { environment } from "@environments/environment.development";
 
 @Injectable()
-export class BoardsService {
+export class BoardsApiService {
   private httpClient = inject(HttpClient);
 
   public getBoards(): Observable<BoardInterface[]> {
