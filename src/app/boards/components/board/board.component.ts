@@ -73,6 +73,12 @@ export class BoardComponent implements OnInit {
       .subscribe((board) => {
         this.boardService.updateBoard(board);
       });
+
+    this.socketService
+      .listen<BoardInterface>(SocketEvents.BoardsDeleteSuccess)
+      .subscribe((board) => {
+        this.router.navigateByUrl('/boards');
+      });
   }
 
   public fetchData() {
@@ -117,11 +123,16 @@ export class BoardComponent implements OnInit {
     this.tasksApiService.createTask(taskInput);
   }
 
-  getTasksByColumn(columnId: string, tasks: TaskInterface[]) {
+  getTasksByColumn(columnId: string, tasks: TaskInterface[]): TaskInterface[] {
     return tasks.filter((task) => task.columnId === columnId);
   }
 
-  public updateBoardName(boardName: string) {
+  public updateBoardName(boardName: string): void {
     this.boardsApiService.updateBoard(this.boardId, {title: boardName});
+  }
+  public deleteBoard(): void {
+    if (confirm(`The board [${this.boardService.board()?.title}] will be deleted. Are you sure?`)) {
+      this.boardsApiService.deleteBoard(this.boardId);
+    }
   }
 }

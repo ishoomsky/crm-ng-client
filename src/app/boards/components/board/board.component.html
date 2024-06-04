@@ -12,6 +12,10 @@
       [title]="board.title"
       (handleSubmit)="updateBoardName($event)"
     ></app-inline-form>
+    <div
+      class="delete-board"
+      (click)="deleteBoard()"
+    >Delete board</div>
   </div>
   <div class="columns">
     @for(column of boardService.columns(); track column.id) {

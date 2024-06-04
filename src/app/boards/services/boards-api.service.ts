@@ -30,4 +30,8 @@ export class BoardsApiService {
   public updateBoard(boardId: string, fields: {title: string}): void {
     this.socketService.emit(SocketEvents.BoardsUpdate, {boardId, fields});
   }
+
+  public deleteBoard(boardId: string): void {
+    this.socketService.emit(SocketEvents.BoardsDelete, {boardId});
+  }
 }
