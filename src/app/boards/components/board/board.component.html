@@ -11,6 +11,19 @@
     @for(column of boardService.columns(); track column.id) {
       <div class="column">
         <div class="column-title">{{column.title}}</div>
+        @for(task of getTasksByColumn(column.id, boardService.tasks()); track task.id) {
+          <div class="task">
+            {{task.title}}
+          </div>
+        }
+        <app-inline-form
+          class="create-task-form"
+          defaultText="Add a card"
+          [hasButton]="true"
+          buttonText="Add card"
+          inputPlaceholder="Enter a title for this card"
+          (handleSubmit)="createTask($event, column.id)"
+        ></app-inline-form>
       </div>
     }
     <app-inline-form

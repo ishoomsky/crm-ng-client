@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import { BoardService } from "@app/boards/services/board.service";
 import { JsonPipe, NgForOf, NgIf } from "@angular/common";
 import { SocketService } from "@app/shared/services/socket.service";
@@ -11,6 +11,9 @@ import { TopbarComponent } from "@app/shared/components/topbar/topbar.component"
 import { InlineFormComponent } from "@app/shared/components/inline-form/inline-form.component";
 import { ColumnInputInterface } from "@app/shared/types/column-input.interface";
 import { ColumnInterface } from "@app/shared/types/column.interface";
+import { TaskInterface } from "@app/shared/types/task.interface";
+import { TasksApiService } from "@app/boards/services/tasks-api.service";
+import { TaskInputInterface } from "@app/shared/types/task-input.interface";
 
 @Component({
   selector: 'app-board',
@@ -24,7 +27,7 @@ import { ColumnInterface } from "@app/shared/types/column.interface";
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
-  providers: [BoardsApiService, ColumnsApiService, BoardService]
+  providers: [BoardsApiService, ColumnsApiService, BoardService, TasksApiService]
 })
 export class BoardComponent implements OnInit {
   @Input() boardId!: string;
@@ -33,6 +36,7 @@ export class BoardComponent implements OnInit {
   private socketService = inject(SocketService);
   private boardsApiService = inject(BoardsApiService);
   private columnsApiService = inject(ColumnsApiService);
+  private tasksApiService = inject(TasksApiService);
 
   private destroyRef = inject(DestroyRef);
   public boardService = inject(BoardService);
@@ -56,6 +60,12 @@ export class BoardComponent implements OnInit {
       .subscribe((column) => {
         this.boardService.addColumn(column);
       })
+
+    this.socketService
+      .listen<TaskInterface>(SocketEvents.TasksCreateSuccess)
+      .subscribe((task) => {
+        this.boardService.addTask(task);
+      })
   }
 
   public fetchData() {
@@ -72,11 +82,16 @@ export class BoardComponent implements OnInit {
       .subscribe((columns) => {
         this.boardService.columns.set(columns);
       })
+
+    this.tasksApiService.getTasks(this.boardId)
+      .subscribe((columns) => {
+        this.boardService.setTasks(columns);
+      })
   }
 
-  test() {
-    this.socketService.emit('columns:create', {boardId: this.boardId, title: 'FOO'})
-  }
+  // test() {
+  //   this.socketService.emit('columns:create', {boardId: this.boardId, title: 'FOO'})
+  // }
 
   public createColumn(title: string): void {
     const columnInput: ColumnInputInterface = {
@@ -84,5 +99,18 @@ export class BoardComponent implements OnInit {
       boardId: this.boardId,
     };
     this.columnsApiService.createColumn(columnInput);
+  }
+
+  public createTask(title: string, columnId: string): void {
+    const taskInput: TaskInputInterface = {
+      title,
+      boardId: this.boardId,
+      columnId,
+    };
+    this.tasksApiService.createTask(taskInput);
+  }
+
+  getTasksByColumn(columnId: string, tasks: TaskInterface[]) {
+    return tasks.filter((task) => task.columnId === columnId);
   }
 }
