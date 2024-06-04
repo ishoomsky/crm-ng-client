@@ -14,6 +14,7 @@ import { ColumnInterface } from "@app/shared/types/column.interface";
 import { TaskInterface } from "@app/shared/types/task.interface";
 import { TasksApiService } from "@app/boards/services/tasks-api.service";
 import { TaskInputInterface } from "@app/shared/types/task-input.interface";
+import { BoardInterface } from "@app/boards/types/board.interface";
 
 @Component({
   selector: 'app-board',
@@ -50,22 +51,28 @@ export class BoardComponent implements OnInit {
     this.router.events
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.boardService.leaveBoard(this.boardId);
-      }
-    })
+        if (event instanceof NavigationStart) {
+          this.boardService.leaveBoard(this.boardId);
+        }
+      });
 
     this.socketService
       .listen<ColumnInterface>(SocketEvents.ColumnsCreateSuccess)
       .subscribe((column) => {
         this.boardService.addColumn(column);
-      })
+      });
 
     this.socketService
       .listen<TaskInterface>(SocketEvents.TasksCreateSuccess)
       .subscribe((task) => {
         this.boardService.addTask(task);
-      })
+      });
+
+    this.socketService
+      .listen<BoardInterface>(SocketEvents.BoardsUpdateSuccess)
+      .subscribe((board) => {
+        this.boardService.updateBoard(board);
+      });
   }
 
   public fetchData() {
@@ -112,5 +119,9 @@ export class BoardComponent implements OnInit {
 
   getTasksByColumn(columnId: string, tasks: TaskInterface[]) {
     return tasks.filter((task) => task.columnId === columnId);
+  }
+
+  public updateBoardName(boardName: string) {
+    this.boardsApiService.updateBoard(this.boardId, {title: boardName});
   }
 }

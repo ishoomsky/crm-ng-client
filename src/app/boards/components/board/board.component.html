@@ -5,7 +5,13 @@
   class="board"
 >
   <div class="board-header-container">
-    inline form board
+    <app-inline-form
+      *ngIf="boardService.board() as board"
+      class="edit-board-form"
+      [defaultText]="board.title"
+      [title]="board.title"
+      (handleSubmit)="updateBoardName($event)"
+    ></app-inline-form>
   </div>
   <div class="columns">
     @for(column of boardService.columns(); track column.id) {

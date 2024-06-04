@@ -17,6 +17,13 @@ export class BoardService {
     this.socketService.emit(SocketEvents.BoardsLeave, {boardId});
   }
 
+  public updateBoard(updatedBoard: BoardInterface): void {
+    const board = this.board();
+    if (board) {
+      this.board.set({...board, title: updatedBoard.title});
+    }
+  }
+
   public setTasks(tasks: TaskInterface[]): void {
     this.tasks.set(tasks);
   }

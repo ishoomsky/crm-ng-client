@@ -3,10 +3,13 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { BoardInterface } from "@app/boards/types/board.interface";
 import { environment } from "@environments/environment.development";
+import { SocketService } from "@app/shared/services/socket.service";
+import SocketEvents from "@app/shared/types/socket-events.enum";
 
 @Injectable()
 export class BoardsApiService {
   private httpClient = inject(HttpClient);
+  private socketService = inject(SocketService);
 
   public getBoards(): Observable<BoardInterface[]> {
     const url = environment.apiUrl + '/boards';
@@ -23,5 +26,8 @@ export class BoardsApiService {
     const url = `${environment.apiUrl}/boards/${boardId}`;
 
     return this.httpClient.get<BoardInterface>(url);
+  }
+  public updateBoard(boardId: string, fields: {title: string}): void {
+    this.socketService.emit(SocketEvents.BoardsUpdate, {boardId, fields});
   }
 }
