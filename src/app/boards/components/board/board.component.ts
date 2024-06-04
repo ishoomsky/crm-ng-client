@@ -58,25 +58,43 @@ export class BoardComponent implements OnInit {
 
     this.socketService
       .listen<ColumnInterface>(SocketEvents.ColumnsCreateSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((column) => {
         this.boardService.addColumn(column);
       });
 
     this.socketService
+      .listen<ColumnInterface>(SocketEvents.ColumnsUpdateSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((column) => {
+        this.boardService.updateColumn(column);
+      });
+
+    this.socketService
+      .listen<string>(SocketEvents.ColumnsDeleteSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((columnId) => {
+        this.boardService.deleteColumn(columnId);
+      });
+
+    this.socketService
       .listen<TaskInterface>(SocketEvents.TasksCreateSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((task) => {
         this.boardService.addTask(task);
       });
 
     this.socketService
       .listen<BoardInterface>(SocketEvents.BoardsUpdateSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((board) => {
         this.boardService.updateBoard(board);
       });
 
     this.socketService
-      .listen<BoardInterface>(SocketEvents.BoardsDeleteSuccess)
-      .subscribe((board) => {
+      .listen<void>(SocketEvents.BoardsDeleteSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
         this.router.navigateByUrl('/boards');
       });
   }
@@ -102,10 +120,6 @@ export class BoardComponent implements OnInit {
       })
   }
 
-  // test() {
-  //   this.socketService.emit('columns:create', {boardId: this.boardId, title: 'FOO'})
-  // }
-
   public createColumn(title: string): void {
     const columnInput: ColumnInputInterface = {
       title,
@@ -123,7 +137,7 @@ export class BoardComponent implements OnInit {
     this.tasksApiService.createTask(taskInput);
   }
 
-  getTasksByColumn(columnId: string, tasks: TaskInterface[]): TaskInterface[] {
+  public getTasksByColumn(columnId: string, tasks: TaskInterface[]): TaskInterface[] {
     return tasks.filter((task) => task.columnId === columnId);
   }
 
@@ -135,4 +149,16 @@ export class BoardComponent implements OnInit {
       this.boardsApiService.deleteBoard(this.boardId);
     }
   }
+
+  public updateColumn(title: string, columnId: string): void {
+    this.columnsApiService.updateColumn(this.boardId, columnId, {title});
+  }
+
+  public deleteColumn(columnId: string): void {
+    if (confirm(`The column will be deleted. Are you sure?`)) {
+      this.columnsApiService.deleteColumn(this.boardId, columnId);
+    }
+  }
+
+
 }

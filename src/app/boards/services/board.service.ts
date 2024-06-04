@@ -24,16 +24,32 @@ export class BoardService {
     }
   }
 
-  public setTasks(tasks: TaskInterface[]): void {
-    this.tasks.set(tasks);
-  }
-
-  addColumn(column: ColumnInterface): void {
+  public addColumn(column: ColumnInterface): void {
     const updatedColumns = [...this.columns(), column];
     this.columns.set(updatedColumns);
   }
-  addTask(task: TaskInterface): void {
+
+  public updateColumn(updatedColumn: ColumnInterface): void {
+    const columns = [...this.columns()];
+    if (columns) {
+      const columnIndex = this.columns().findIndex((col) => col.id === updatedColumn.id);
+      columns.splice(columnIndex, 1, updatedColumn);
+    }
+    this.columns.set(columns);
+  }
+
+  public deleteColumn(columnId: string): void {
+    this.columns.set(
+      [...this.columns()].filter((col) => col.id !== columnId),
+    );
+  }
+
+  public setTasks(tasks: TaskInterface[]): void {
+    this.tasks.set(tasks);
+  }
+  public addTask(task: TaskInterface): void {
     const updatedTasks = [...this.tasks(), task];
     this.tasks.set(updatedTasks);
   }
+
 }

@@ -20,4 +20,12 @@ export class ColumnsApiService {
   public createColumn(columnInput: ColumnInputInterface): void {
     this.socketService.emit(SocketEvents.ColumnsCreate, columnInput);
   }
+
+  public updateColumn(boardId: string, columnId: string, fields: {title: string}): void {
+    this.socketService.emit(SocketEvents.ColumnsUpdate, {boardId, columnId, fields});
+  }
+
+  public deleteColumn(boardId: string, columnId: string): void {
+    this.socketService.emit(SocketEvents.ColumnsDelete, {boardId, columnId});
+  }
 }
