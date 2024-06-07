@@ -52,4 +52,17 @@ export class BoardService {
     this.tasks.set(updatedTasks);
   }
 
+  public updateTask(updatedTask: TaskInterface): void {
+    const updatedTasks = [...this.tasks()];
+    const taskIndex = this.tasks().findIndex((task) => task.id === updatedTask.id);
+
+    updatedTasks.splice(taskIndex, 1, updatedTask);
+    this.tasks.set(updatedTasks);
+  };
+
+  public deleteTask(taskId: string): void {
+    this.tasks.set(
+      [...this.tasks()].filter((task) => task.id !== taskId),
+    );
+  }
 }

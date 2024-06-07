@@ -38,7 +38,10 @@
         <div class="column-delete-icon"></div>
 <!--        <div class="column-title">{{column.title}}</div>-->
         @for(task of getTasksByColumn(column.id, boardService.tasks()); track task.id) {
-          <div class="task">
+          <div
+            class="task"
+            (click)="openTask(task.id)"
+          >
             {{task.title}}
           </div>
         }
@@ -62,3 +65,4 @@
     ></app-inline-form>
   </div>
 </div>
+<router-outlet></router-outlet>

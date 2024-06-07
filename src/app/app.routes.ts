@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AlreadyLoggedInGuard, AuthenticatedUserGuard } from "@app/app.guards";
+import { TaskModalComponent } from "@app/boards/components/task-modal/task-modal.component";
 
 export const routes: Routes = [
   {

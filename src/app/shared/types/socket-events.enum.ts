@@ -19,6 +19,12 @@ enum SocketEvents {
   TasksCreate = 'tasks:create',
   TasksCreateSuccess = 'tasks:createSuccess',
   TasksCreateFailure = 'tasks:createFailure',
+  TasksUpdate = 'task:update',
+  TasksUpdateSuccess = 'task:updateSuccess',
+  TasksUpdateFailure = 'task:updateFailure',
+  TasksDelete = 'task:delete',
+  TasksDeleteSuccess = 'task:deleteSuccess',
+  TasksDeleteFailure = 'task:deleteFailure',
 }
 
 export default SocketEvents;

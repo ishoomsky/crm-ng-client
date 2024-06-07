@@ -21,4 +21,20 @@ export class TasksApiService {
   public createTask(taskInput: TaskInputInterface): void {
     this.socketService.emit(SocketEvents.TasksCreate, taskInput);
   }
+
+  public updateTask(boardId: string, taskId: string, fields: {
+    title?: string;
+    description?: string;
+    columnId?: string;
+  }): void {
+    this.socketService.emit(SocketEvents.TasksUpdate, {
+      boardId,
+      taskId,
+      fields,
+    })
+  }
+
+  public deleteTask(boardId: string, taskId: string): void {
+    this.socketService.emit(SocketEvents.TasksDelete, { boardId, taskId });
+  }
 }

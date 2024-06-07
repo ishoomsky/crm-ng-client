@@ -1,0 +1,63 @@
+@if (task) {
+  <div class="task-modal-container">
+    <div class="task-modal-header">
+      <app-inline-form
+        class="task-modal-edit-title-form"
+        [defaultText]="task.title"
+        [title]="task.title"
+        (handleSubmit)="updateTaskName($event)"
+      ></app-inline-form>
+      <img
+        src="/assets/close_icon.svg"
+        alt="close"
+        class="task-modal-close"
+        (click)="goToBoards()"
+      />
+    </div>
+
+    <div class="task-modal-body">
+      <div>
+        <form
+          [formGroup]="columnForm"
+          class="column-select-container"
+        >
+          <select
+            formControlName="columnId"
+            class="column-select"
+          >
+            @for (column of columns; track column.id) {
+              <option [ngValue]="column.id">
+                {{column.title}}
+              </option>
+            }
+          </select>
+        </form>
+        <div class="task-modal-description">
+          <div class="task-modal-description-label">Description</div>
+          <app-inline-form
+            class="task-modal-edit-description-form"
+            [defaultText]="task.description || 'Add description'"
+            [title]="task.description || ''"
+            inputType="textarea"
+            [hasButton]="true"
+            (handleSubmit)="updateTaskDescription($event)"
+          ></app-inline-form>
+        </div>
+      </div>
+
+      <div class="task-modal-actions">
+        <div class="task-modal-actions-label">Actions</div>
+        <div>
+          <div
+            class="task-modal-actions-action"
+            (click)="deleteTask()"
+          >
+            <img src="/assets/trash.svg" class="task-modal-actions-icon" alt="delete">
+            Delete
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+<div class="task-modal-backdrop"></div>

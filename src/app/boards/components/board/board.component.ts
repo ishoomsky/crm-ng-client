@@ -3,7 +3,7 @@ import { BoardService } from "@app/boards/services/board.service";
 import { JsonPipe, NgForOf, NgIf } from "@angular/common";
 import { SocketService } from "@app/shared/services/socket.service";
 import SocketEvents from "@app/shared/types/socket-events.enum";
-import { NavigationStart, Router } from "@angular/router";
+import { NavigationStart, Router, RouterOutlet } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BoardsApiService } from "@app/boards/services/boards-api.service";
 import { ColumnsApiService } from "@app/boards/services/columns-api.service";
@@ -24,7 +24,8 @@ import { BoardInterface } from "@app/boards/types/board.interface";
     NgIf,
     TopbarComponent,
     NgForOf,
-    InlineFormComponent
+    InlineFormComponent,
+    RouterOutlet
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
@@ -49,13 +50,15 @@ export class BoardComponent implements OnInit {
 
   private initializeListeners(): void {
     this.router.events
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((event) => {
-        if (event instanceof NavigationStart) {
+        if (
+          event instanceof NavigationStart &&
+          !event.url.includes('/boards/')
+          ) {
           this.boardService.leaveBoard(this.boardId);
         }
       });
-
+    // Columns
     this.socketService
       .listen<ColumnInterface>(SocketEvents.ColumnsCreateSuccess)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -76,7 +79,7 @@ export class BoardComponent implements OnInit {
       .subscribe((columnId) => {
         this.boardService.deleteColumn(columnId);
       });
-
+    // Tasks
     this.socketService
       .listen<TaskInterface>(SocketEvents.TasksCreateSuccess)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -84,6 +87,21 @@ export class BoardComponent implements OnInit {
         this.boardService.addTask(task);
       });
 
+    this.socketService
+      .listen<TaskInterface>(SocketEvents.TasksUpdateSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((task) => {
+        this.boardService.updateTask(task);
+      });
+
+    this.socketService
+      .listen<string>(SocketEvents.TasksDeleteSuccess)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((taskId) => {
+        this.boardService.deleteTask(taskId);
+      });
+
+    // Boards
     this.socketService
       .listen<BoardInterface>(SocketEvents.BoardsUpdateSuccess)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -115,8 +133,8 @@ export class BoardComponent implements OnInit {
       })
 
     this.tasksApiService.getTasks(this.boardId)
-      .subscribe((columns) => {
-        this.boardService.setTasks(columns);
+      .subscribe((tasks) => {
+        this.boardService.setTasks(tasks);
       })
   }
 
@@ -159,6 +177,8 @@ export class BoardComponent implements OnInit {
       this.columnsApiService.deleteColumn(this.boardId, columnId);
     }
   }
-
+  public openTask(taskId: string): void {
+    this.router.navigate(['boards', this.boardId, 'tasks', taskId]);
+  }
 
 }
